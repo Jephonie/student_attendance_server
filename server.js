@@ -15,7 +15,11 @@ const DESC_DIR = path.resolve("./descriptors");
 const app = express();
 const PORT = 3000;
 
-app.use(cors());
+app.use(cors({
+  origin: "*",            // or ["http://10.249.38.61:4173"] for stricter setup
+  methods: ["GET", "POST"],
+  allowedHeaders: ["Content-Type"],
+}));
 app.use(express.json({ limit: "20mb" }));
 app.use("/face", express.static(FACE_DIR));
 
@@ -34,7 +38,9 @@ Promise.all([
   faceapi.nets.faceRecognitionNet.loadFromDisk(MODEL_PATH),
 ]).then(() => {
   console.log("✅ Models loaded");
-  app.listen(PORT, () => console.log(`✅ Server running on http://localhost:${PORT}`));
+  app.listen(PORT, "0.0.0.0", () =>
+  console.log(`✅ Server running on http://10.249.38.91:${PORT}`)
+);
 }).catch(err => console.error("❌ Model load error:", err));
 
 // ==============================
